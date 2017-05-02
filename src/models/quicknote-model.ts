@@ -1,9 +1,14 @@
+import { Observable } from 'rxjs/Observable';
+
 export class QuicknoteModel{
   quicknote: any;
-  quicklistObserver: any;
+  quicknoteObserver: any;
 
   constructor(public title: string, public items: any[]){
     this.items = items;
+    this.quicknote = Observable.create(observer => {
+      this.quicknoteObserver = observer;
+    });
   }
 
   addItem(item): void{
@@ -11,6 +16,7 @@ export class QuicknoteModel{
       title: item,
       checked: false
     });
+    this.quicknoteObserver.next(true);
   }
 
   removeItem(item):void{
@@ -19,6 +25,7 @@ export class QuicknoteModel{
     if(index > -1){
       this.items.splice(index, 1)
     }
+    this.quicknoteObserver.next(true);
   }
 
   renameItem(item, title): void{
@@ -27,13 +34,20 @@ export class QuicknoteModel{
     if (index > -1){
       this.items[index].title = title
     }
+    this.quicknoteObserver.next(true);
   }
 
   setTitle(title): void{
     this.title = title;
+    this.quicknoteObserver.next(true);
   }
 
   toggleItem(item): void{
-    item.checked = !item.checked
+    item.checked = !item.checked;
+    this.quicknoteObserver.next(true);
+  }
+
+  quicknoteUpdates(): Observable<any>{
+    return this.quicknote;
   }
 }
