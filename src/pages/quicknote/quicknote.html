@@ -1,19 +1,19 @@
 <ion-header>
 
   <ion-navbar color="secondary">
-    <ion-title>Quicknote</ion-title>
+    <ion-title>{{quicknote.title}}</ion-title>
     <ion-buttons end>
       <button ion-button icon-only (click)="uncheckItems()"><ion-icon name "refresh-circle"></ion-icon</button>
-      <button ion-button icon-only (click)="addItems()"><ion-icon name "add-circle"></ion-icon</button>
+      <button ion-button icon-only (click)="addItem()"><ion-icon name "add-circle"></ion-icon</button>
     </ion-buttons>
   </ion-navbar>
 </ion-header>
 
 <ion-content>
-  <ion-list>
-    <ion-item-sliding>
+  <ion-list no-lines>
+    <ion-item-sliding *ngFor="let item of quicknote.items">
       <ion-item>
-        <ion-label>Item Title</ion-label>
+        <ion-label>{{item.title}}</ion-label>
         <ion-checkbox [checked]="item.checked" (click)="toggleItem(item)">
         </ion-checkbox>
       </ion-item>
