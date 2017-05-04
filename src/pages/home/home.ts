@@ -3,6 +3,7 @@ import { IonicPage, NavController, AlertController,Platform } from 'ionic-angula
 import { QuicknoteModel } from '../../models/quicknote-model';
 import { Data } from '../../providers/data';
 import { Keyboard } from '@ionic-native/keyboard';
+import { Storage } from '@ionic/storage';
 
 @IonicPage()
 @Component({
@@ -18,12 +19,19 @@ export class HomePage {
     public alertCtrl: AlertController,
     public dataService: Data,
     public platform: Platform,
+    public storage: Storage,
     public keyboard: Keyboard
   ) {
 
   }
   ionViewDidLoad(){
     this.platform.ready().then(() =>{
+      this.storage.get('introShown').then((result) => {
+        if(!result){
+          this.storage.set('introShown', true);
+          this.navCtrl.setRoot('Intro');
+        }
+      });
       this.dataService.getData().then((quicknotes) => {
         let saveQuicknotes: any = false;
         if(typeof(quicknotes) != "undefined"){
