@@ -22,7 +22,25 @@ export class HomePage {
   ) {
 
   }
-  ionViewDidLoad(){}
+  ionViewDidLoad(){
+    this.platform.ready().then(() =>{
+      this.dataService.getData().then((quicknotes) => {
+        let saveQuicknotes: any = false;
+        if(typeof(quicknotes) != "undefined"){
+          saveQuicknotes = JSON.parse(quicknotes);
+        }
+        if(saveQuicknotes){
+          saveQuicknotes.forEach((saveQuicknote) =>{
+            let loadQuicknote = new QuicknoteModel(saveQuicknote.title, saveQuicknote.items);
+            this.quicknotes.push(loadQuicknote);
+            loadQuicknote.quicknoteUpdates().subscribe(update =>{
+              this.save();
+            });
+          });
+        }
+      });
+    });
+  }
 
   addQuicknote(): void{
     let prompt = this.alertCtrl.create({
@@ -96,6 +114,9 @@ export class HomePage {
     }
   }
 
-  save(): void{}
+  save(): void{
+    this.keyboard.close();
+    this.dataService.save(this.quicknotes);
+  }
 
 }
